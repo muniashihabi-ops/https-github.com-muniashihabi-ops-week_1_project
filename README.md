@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Web Programming – Week 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* minimal styling for clarity; not required by the tasks */
+    body { font-family: system-ui, Arial, sans-serif; line-height: 1.5; margin: 2rem; }
+    .row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    textarea { width: 100%; max-width: 520px; height: 84px; }
+    button { padding: 0.5rem 0.9rem; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; }
+    ul { margin-top: 0.5rem; }
+    .muted { color: #666; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <!-- 1) Hello world! -->
+  <h1 id="title">Hello world</h1>
+
+  <!-- 2) Button that logs to console -->
+  <div class="row" style="margin-bottom:1rem;">
+    <button id="my-button" type="button">Click me</button>
+    <span class="muted">Open DevTools Console to see the log.</span>
+  </div>
+
+  <!-- 4) Unordered list + add button -->
+  <div style="margin-bottom:0.5rem;">
+    <!-- 5) Custom text area whose content goes into new <li> -->
+    <label for="note-input" class="muted">Write something to add to the list:</label><br/>
+    <textarea id="note-input" placeholder="Type here, then press Add or Enter…"></textarea>
+  </div>
+  <div class="row">
+    <button id="add-data" type="button">Add to list</button>
+    <span id="hint" class="muted" aria-live="polite"></span>
+  </div>
+
+  <ul id="my-list" aria-live="polite"></ul>
+
+  <!-- Script is deferred so the DOM exists before JS runs (per the note) -->
+  <script defer>
+    // Grab elements once
+    const title    = document.getElementById('title');
+    const helloBtn = document.getElementById('my-button');
+    const addBtn   = document.getElementById('add-data');
+    const list     = document.getElementById('my-list');
+    const input    = document.getElementById('note-input');
+    const hint     = document.getElementById('hint');
+
+    // 2) Print “hello world” to console when button clicked
+    helloBtn.addEventListener('click', () => {
+      console.log('hello world');
+
+      // 3) Also change the <h1> text to “Moi maailma”
+      title.textContent = 'Moi maailma';
+    });
+
+    // Helper: add an item to the list
+    function addItemFromInput() {
+      const text = input.value.trim();
+      if (!text) {
+        hint.textContent = 'Please type something first.';
+        input.focus();
+        return;
+      }
+
+      // 4/5) Create <li> and append
+      const li = document.createElement('li');
+      li.textContent = text;
+      list.appendChild(li);
+
+      // Small UX: clear and refocus
+      input.value = '';
+      hint.textContent = 'Added!';
+      input.focus();
+    }
+
+    // 4/5) Wire the button to add <li> (with textarea content)
+    addBtn.addEventListener('click', addItemFromInput);
+
+    // Nice-to-have: press Enter (without Shift) inside the textarea to add
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        addItemFromInput();
+      }
+    });
+  </script>
+</body>
+</html>
